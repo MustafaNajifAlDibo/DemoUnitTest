@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../DemoLibrary/DemoLibrary.csproj" />
+  <Project Path="DemoXUnitTestWinForm.csproj" />
+</Solution>
