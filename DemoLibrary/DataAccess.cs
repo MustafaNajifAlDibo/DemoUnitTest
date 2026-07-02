@@ -10,15 +10,35 @@ namespace DemoLibrary {
         static string path = Path.Combine(parentPath,"PersonText.txt");
 
         public static async Task AddNewPersonAsync(PersonModel person) {
-            List<string> lines = new List<string>();
-            List<PersonModel> people = await GetAllPeopleAsync();
-            people.Add(person);
 
-            foreach (PersonModel p in people) {
-                lines.Add($"{p.FirstName},{p.LastName}");
-            }
+            List<PersonModel> people = await GetAllPeopleAsync();
+
+            AddPersonToPeopleList(people, person);
+
+            List<string> lines = ConvertModelsToCSV(people);
 
             await File.WriteAllLinesAsync(path, lines);
+        }
+
+        public static void AddPersonToPeopleList(List<PersonModel> people, PersonModel person) {
+
+            if(string.IsNullOrWhiteSpace(person.FirstName)) {
+                throw new ArgumentException("You passed in an invalid parameter","FirstName");
+            }
+
+            if (string.IsNullOrWhiteSpace(person.LastName)) {
+                throw new ArgumentException("You passed in an invalid parameter", "LastName");
+            }
+
+            people.Add(person);
+        }
+
+        public static List<string> ConvertModelsToCSV(List<PersonModel> people) {
+            List<string> output = new List<string>();
+            foreach (PersonModel p in people) {
+                output.Add($"{p.FirstName},{p.LastName}");
+            }
+            return output;
         }
 
         public static async Task<List<PersonModel>> GetAllPeopleAsync() {
